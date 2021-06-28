@@ -79,9 +79,9 @@ cfg.DATA_LOADER.PIN_MEMORY = False
 # Solver - The same as optimizer
 # ---------------------------------------------------------------------------- #
 cfg.TRAINER = CN()
-cfg.TRAINER.EPOCHS = 20
+cfg.TRAINER.EPOCHS = 25
 cfg.TRAINER.SCHEDULER = "multistep"
-cfg.TRAINER.LR_STEPS = [12, 16, 18]
+cfg.TRAINER.LR_STEPS = [15, 20, 23]
 cfg.TRAINER.GAMMA = 0.1
 cfg.TRAINER.BATCH_SIZE = 32
 cfg.TRAINER.EVAL_STEP = 1
