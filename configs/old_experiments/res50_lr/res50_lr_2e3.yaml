@@ -1,0 +1,11 @@
+---
+
+MODEL:
+    THRESHOLD: 0.25
+    NAME: "resnet50"
+    NUM_CLASSES: 5
+OUTPUT_DIR:
+    "outputs/resnet50_lr_2e3"
+TRAINER:
+    LR: 2e-3
+...
