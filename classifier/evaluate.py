@@ -10,8 +10,8 @@ from statistics import mean
 def _calculate_AP(
     class_predictions: torch.Tensor,
     class_targets: torch.Tensor,
-    recall_vals = 11,
-    conf_vals = 500
+    recall_vals = 1000,
+    conf_vals = 1000
     ):
     """
     calculates average precision for a single class
@@ -20,13 +20,6 @@ def _calculate_AP(
     - class_targets     : torch.Tensor in shape of [num_targets]
     where num_preds == num_targets
     """
-    tmp_pos_preds = torch.zeros(class_predictions.size()[0])
-    tmp_pos_preds[class_predictions>=0.7] = 1
-    
-    #Variables and code used to verify validity.
-    #print(f"total positives(thr 0.7):{torch.sum(tmp_pos_preds)}")
-    #print(f"true positives(thr 0.7): {torch.sum(tmp_pos_preds*class_targets)}")
-    #print(f"false negatives(thr 0.7): {torch.sum(class_targets) - torch.sum(tmp_pos_preds*class_targets)}")
 
     #linear approximation of continuous confidence threshold
     confidence_thresholds = torch.linspace(0, 1, conf_vals)

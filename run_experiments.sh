@@ -3,7 +3,7 @@
 cd "$(dirname "$0")"
 proj_dir=$(dirname "$0")
 conf_dir="configs"
-experiment_dir="res50_lr2"
+experiment_dir="rg3"
 for config_file in "${proj_dir}/${conf_dir}/${experiment_dir}"/*
 do
   #Getting conf_name for output logfile
