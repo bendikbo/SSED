@@ -8,4 +8,9 @@ OUTPUT_DIR:
     "outputs/resnet50_lr_3e2"
 TRAINER:
     LR: 3e-2
+INPUT:
+    TRANSFORM:
+        RAND_GAUSS:
+            ACTIVE: True
+            INTENSITY: 0.35
 ...

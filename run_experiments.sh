@@ -3,7 +3,7 @@
 cd "$(dirname "$0")"
 proj_dir=$(dirname "$0")
 conf_dir="configs"
-experiment_dir="rg3"
+experiment_dir="window_size_thr"
 for config_file in "${proj_dir}/${conf_dir}/${experiment_dir}"/*
 do
   #Getting conf_name for output logfile
