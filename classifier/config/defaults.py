@@ -72,7 +72,7 @@ cfg.INPUT.TRANSFORM.RAND_CONTRAST.ENHANCE = 50
 # DataLoader
 # -----------------------------------------------------------------------------
 cfg.DATA_LOADER = CN()
-cfg.DATA_LOADER.NUM_WORKERS = 32
+cfg.DATA_LOADER.NUM_WORKERS = 8
 cfg.DATA_LOADER.PIN_MEMORY = False
 
 # ---------------------------------------------------------------------------- #
@@ -101,3 +101,14 @@ cfg.TEST.BATCH_SIZE = 32
 cfg.LOG_STEP = 10
 cfg.OUTPUT_DIR = "outputs"
 cfg.DATASET_DIR = "datasets"
+
+# ---------------------------------------------------------------------------- #
+# Inference options
+# ---------------------------------------------------------------------------- #
+cfg.INFERENCE = CN()
+#Hops per window should probably be around 1/MODEL.THRESHOLD
+cfg.INFERENCE.HOPS_PER_WINDOW = 4
+cfg.INFERENCE.OUTPUT_DIR = "inference/"
+cfg.INFERENCE.BATCH_SIZE = 32
+cfg.INFERENCE.OUTPUT_FORMAT = "audacity"
+cfg.INFERENCE.THRESHOLD = 0.6

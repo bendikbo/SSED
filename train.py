@@ -47,7 +47,6 @@ def get_parser():
     return parser
 
 
-
 def main():
     args = get_parser().parse_args()
     cfg.merge_from_file(args.config_file)
