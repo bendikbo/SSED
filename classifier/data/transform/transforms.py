@@ -217,11 +217,13 @@ class Spectrify(nn.Module):
     Pytorch module to convert 1D tensor to spectrogram(s)
     cfg.RESOLUTION to specify [WIDTH, HEIGHT]
     cfg.CHANNELS to specify channel order between ["mel", "log", "normal"]
+    cfg.FREQ_CROP, if only part of the spectrogram frequency dimension is needed
     All outputs are normalized
     """
     def __init__(self, cfg):
         super(Spectrify, self).__init__()
         self.length = cfg.LENGTH
+        #Setting imagenet resolution as defaults
         self.width = 224
         self.height = 224
         sample_freq = 16000
