@@ -20,7 +20,7 @@ from classifier.models import build_model
 from classifier.config.defaults import cfg
 from classifier.utils import to_cuda
 from classifier.utils import load_best_checkpoint
-from classifier.data.datasets.sliding_window import WindowSlide
+from classifier.data.datasets.window_slide import WindowSlide
 
 
 
@@ -79,8 +79,13 @@ class Inferencer:
                 preds = self.model(x_batch)
                 #Just to make absolutely sure everything's in order
                 all_raw_preds[indices] = preds
-            processed_preds = torch.zeros_like(all_raw_preds)
             num_hops = self.cfg.INFERENCE.HOPS_PER_WINDOW
+
+            #processed_preds.dim() == (predictions_per_file + num_hops, num_classes)
+            processed_preds = torch.zeros(
+                (all_raw_preds.dim()[0]+num_hops,
+                all_raw_preds.dim()[1])
+            )
             #For loop to make processes preds into moving average
             #of raw preds based on number of hops per class window
             for hop_no in range(num_hops):
@@ -88,12 +93,12 @@ class Inferencer:
                 #apparantly, there's no elegant way to do this
                 if hop_no < (num_hops - 1):
                     processed_preds[hop_no:-num_hops + hop_no + 1,:] \
-                    = all_raw_preds[hop_no:-num_hops + hop_no + 1,:]/num_hops
+                    += all_raw_preds[hop_no:-num_hops + hop_no + 1,:]/num_hops
                 else:
                     processed_preds[hop_no:,:]\
-                    = all_raw_preds[hop_no:,:]/num_hops
+                    += all_raw_preds[hop_no:,:]/num_hops
             if num_hops > 1:
-                #Doing this to offset
+                #This is done to fix edge cases in moving mean method
                 numerator=torch.linspace(1,num_hops-1, num_hops-1)
                 denominator = torch.linspace(num_hops-1, 1, num_hops-1)
                 edge_multiplier=torch.div(numerator, denominator)
@@ -144,6 +149,8 @@ class Inferencer:
                 i+=1
         if self.cfg.INFERENCE.OUTPUT == "csv":
             self.write_to_csv(predictions, output_filename)
+        elif self.cfg.INFERENCE.OUTPUT == "audacity":
+            self.write_audacity_labels(predictions, output_filename)
     
     def write_to_csv(
         self,
@@ -176,7 +183,6 @@ class Inferencer:
         out_file.close()
         print(f"\n\nFinished inference on: {output_filename}")
         print(f"ouput stored as: {output_path}")
-
 
 
 
