@@ -176,6 +176,7 @@ class Trainer:
 
     def end_evaluation(self):
         self.load_best_model()
+        self.validation_epoch()
         average_precisions, average_loss = self.compute_mAP(self.test_data)
         print(
             f"Epoch: {self.epoch}\n",
