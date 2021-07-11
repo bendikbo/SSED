@@ -72,7 +72,7 @@ cfg.INPUT.TRANSFORM.RAND_CONTRAST.ENHANCE = 25
 # DataLoader
 # -----------------------------------------------------------------------------
 cfg.DATA_LOADER = CN()
-cfg.DATA_LOADER.NUM_WORKERS = 32
+cfg.DATA_LOADER.NUM_WORKERS = 8
 cfg.DATA_LOADER.PIN_MEMORY = False
 
 # ---------------------------------------------------------------------------- #
@@ -83,7 +83,7 @@ cfg.TRAINER.EPOCHS = 25
 cfg.TRAINER.SCHEDULER = "multistep"
 cfg.TRAINER.LR_STEPS = [15, 20, 23]
 cfg.TRAINER.GAMMA = 0.1
-cfg.TRAINER.BATCH_SIZE = 128
+cfg.TRAINER.BATCH_SIZE = 32
 cfg.TRAINER.EVAL_STEP = 1
 cfg.TRAINER.OPTIMIZER = "sgd"
 cfg.TRAINER.LR = 1e-3
@@ -97,7 +97,18 @@ cfg.TRAINER.ACTIVATION = "sigmoid"
 cfg.TEST = CN()
 cfg.TEST.NMS_THRESHOLD = 0.5
 cfg.TEST.CONFIDENCE_THRESHOLD = 0.01
-cfg.TEST.BATCH_SIZE = 128
+cfg.TEST.BATCH_SIZE = 32
 cfg.LOG_STEP = 10
 cfg.OUTPUT_DIR = "outputs"
 cfg.DATASET_DIR = "datasets"
+
+# ---------------------------------------------------------------------------- #
+# Inference options
+# ---------------------------------------------------------------------------- #
+cfg.INFERENCE = CN()
+#Hops per window should probably be around 1/MODEL.THRESHOLD
+cfg.INFERENCE.HOPS_PER_WINDOW = 4
+cfg.INFERENCE.OUTPUT_DIR = "inference/"
+cfg.INFERENCE.BATCH_SIZE = 32
+cfg.INFERENCE.OUTPUT_FORMAT = "audacity"
+cfg.INFERENCE.THRESHOLD = 0.6

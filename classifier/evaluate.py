@@ -20,7 +20,6 @@ def _calculate_AP(
     - class_targets     : torch.Tensor in shape of [num_targets]
     where num_preds == num_targets
     """
-
     #linear approximation of continuous confidence threshold
     confidence_thresholds = torch.linspace(0, 1, conf_vals)
     #Initalize array of predictions considered positive at each distinct confidence threshold
