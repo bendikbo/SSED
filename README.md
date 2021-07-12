@@ -30,24 +30,47 @@ Okay, so you have a problem where you actually need to create your own * *state 
 
 **1. Creating annotations for a dataset**
 
-First of all you need to annotate your dataset, I recommend using audacity for this, as it has built-in spectrogram support, hotkeys for labeling (ctrl+B), in addition to a ton of other cool functionalities. Ater you're done with labeling an audio file, you need to split it into chunks more suitable for training a classifier. Use the script in scripts/create_dataset.py for exactly this purpose, it splits your source audio files into .wav files and .csv files containing descriptions of your sound events.
+First of all you need to annotate your dataset, I recommend using audacity for this, as it has built-in spectrogram support, hotkeys for labeling (ctrl+B), in addition to a ton of other cool functionalities. This part is the most boring part of your job, and it's probably not weird that * *data scientists* * (whatever that means) never do this job themselves. After you're done with labeling an audio file, you need to split it into chunks more suitable for training a classifier. Use the script in scripts/create_dataset.py for exactly this purpose, it splits your source audio files into .wav files and .csv files containing descriptions of your sound events.
 
 **2. Write dataset for your data**
 
-Writing datasets in pytorch is (somewhat) easy, you need to make an inherited class of torch.utils.data.Dataset, overwriting two functions, \_\_len\_\_ and \_\_getitem\_\_.
-
+Writing datasets in pytorch is (somewhat) easy, you need to make an inherited class of torch.utils.data.Dataset, overwriting two functions, \_\_len\_\_ and \_\_getitem\_\_. Below is an example.
 ```python
 from torch.utils.data import Dataset as dataset
+import torchaudio.load
 import os
+from classifier.data.transform.transforms import AudioTransformer as transformer
+from classifier.data.transform.target_transform import build_target_transform
 
 class mydataset(dataset):
-  def __init__(self, cfg):
+"""
+  Super simple example implementation of dataset for this codebase
+"""
+  def __init__(self, cfg, is_train=True):
     #Get a list of all source files here
     #e.g. (given that you've made a cfgnode as cfg.INPUT.SOURCE_PATH)
     self.source_files = os.listdir(cfg.INPUT.SOURCE_DIR)
-    self.source_files = [cfg.INPUT.SOURCE_DIR + source_file for source_file in self.source_files]
+    self.audio_files = []
+    #Probably best to just keep annotations in memory
+    self.annotation_dict = {}
+    for filename in self.source_files:
+      file_extension = filename.split(".")[-1].lower()
+      if file_extension == "csv":
+        wav_name = filename.splie(".")[0].lower() + ".wav"
+        self.annotation_dict[wav_name] = self.read_csv(filename)
+      else:
+        self.audio_files.append(filename)
+    self.transform = transformer(cfg, is_train = is_train)
+    self.target_transform = build_target_transform(cfg)
   def __len__(self):
-    return len(source_files)
+    return len(self.audio_files)
+  def __getitem__(self,idx):
+    filename = self.audio_files[idx]
+    x, fs = torchaudio.load(filename)
+    lines, labels = self.annotation_dict[filename]
+    x, lines, labels = self.transform(x, lines, labels)
+    x, target = self.target_transform(x, lines, labels)
+    return x, target, idx
     
 ```
 
