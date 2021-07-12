@@ -37,7 +37,9 @@ class Inferencer:
         self.dereference_dict = dereference_dict(self.INPUT.NAME)
         for audio_file in audio_files:
             self.add_dataloader(self.cfg, audio_file)
-        self.model = to_cuda(self.load_model(self.cfg))
+        self.model = self.load_model(self.cfg)
+        self.model.eval()
+        to_cuda(self.model)
         self.output_dir = self.cfg.INFERENCE.OUTPUT_DIR
 
     def add_dataloader(self, audio_file):

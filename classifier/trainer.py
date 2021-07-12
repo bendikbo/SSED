@@ -61,6 +61,8 @@ class Trainer:
                 Returns True if current model has the lowest validation loss
             """
             validation_losses = list(self.VALIDATION_LOSS.values())
+            if validation_losses[-1] == min(validation_losses):
+                print(f"NEW BEST VAL LOSS: {validation_losses[-1]}")
             return validation_losses[-1] == min(validation_losses)
         state_dict = self.model.state_dict()
         filepath = self.checkpoint_dir.joinpath(f"{self.global_step}.ckpt")
@@ -176,6 +178,7 @@ class Trainer:
 
     def end_evaluation(self):
         self.load_best_model()
+        self.model.eval()
         self.validation_epoch()
         average_precisions, average_loss = self.compute_mAP(self.test_data)
         print(
