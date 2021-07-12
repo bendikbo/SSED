@@ -37,10 +37,12 @@ First of all you need to annotate your dataset, I recommend using audacity for t
 Writing datasets in pytorch is (somewhat) easy, you need to make an inherited class of torch.utils.data.Dataset, overwriting two functions, \_\_len\_\_ and \_\_getitem\_\_. Below is an example.
 ```python
 from torch.utils.data import Dataset as dataset
-import torchaudio.load
+import torchaudio
 import os
+import pandas as pd
 from classifier.data.transform.transforms import AudioTransformer as transformer
 from classifier.data.transform.target_transform import build_target_transform
+
 
 class mydataset(dataset):
 """
@@ -62,6 +64,13 @@ class mydataset(dataset):
         self.audio_files.append(filename)
     self.transform = transformer(cfg, is_train = is_train)
     self.target_transform = build_target_transform(cfg)
+  def read_csv(self, csv_file):
+    df = pd.read_csv(csv_file)
+    onsets = df["onset"].to_list()
+    offsets = df["offset"].to_list()
+    lines = zip(onsets, offsets)
+    labels = df["class"].to_list()
+    return lines, labels
   def __len__(self):
     return len(self.audio_files)
   def __getitem__(self,idx):
