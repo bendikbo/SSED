@@ -5,6 +5,20 @@ This repository contains a sliding window sound event detection system developed
 The codebase contains multiple backbones, and is (almost) fully configurable in both training and inference through yaml specified configurations.
 This codebase should be easily extendable and reusable for most sound event detection tasks, and I hope you get good use of it, just remember I've licensed it under the MIT License.
 
+# Example application
+
+I've already added a dataset, and the standard cfg-object in classifier/config/defaults.py should lead to the main training script automatically downloading this dataset and starting a training session once downloaded and extracted. So the full list of bash terminal commands to train a (somewhat) state of the art sound event detection system for the bird sounds in the dataset should be as simple as:
+
+```bash
+git clone https://github.com/bendikbo/SSED.git
+mkdir env
+python3 -m venv env
+. env/bin/activate
+pip install -r requirements.txt
+python train.py configs/default.yaml
+```
+assuming you have a somewhat new version of python3 already installed.
+
 
 # Project description
 
