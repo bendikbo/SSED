@@ -1,11 +1,13 @@
-# SRMD - Single Record Multiline Detector
+# SSED - Sliding-window Sound Event Detection
 
-Single Record Multiline Detector for bioacoustic detection/classification. Project undertaken for IES at NTNU
+This repository contains a sliding window sound event detection system developed for a master thesis at NTNU IES, with contributions by NINA - Norsk Institutt for NAturfroskning.
+
+The codebase contains multiple backbones, and is (almost) fully configurable in both training and inference through yaml specified configurations.
 
 
-# Detection and classification of sounds in audio recordings
+# Sound Event Detection
 
-TODO: brief description of 1D CNN Single record multiline detector.
+
 
 # Project description
 
