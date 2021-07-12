@@ -34,7 +34,7 @@ First of all you need to annotate your dataset, I recommend using audacity for t
 
 **2. Write dataset for your data**
 
-Writing datasets in pytorch is (somewhat) easy, you need to make an inherited class of torch.utils.data.Dataset, overwriting two functions, __len__ and __getitem__.
+Writing datasets in pytorch is (somewhat) easy, you need to make an inherited class of torch.utils.data.Dataset, overwriting two functions, \_\_len\_\_ and \_\_getitem\_\_.
 
 ```python
 from torch.utils.data import Dataset as dataset
