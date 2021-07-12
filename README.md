@@ -25,7 +25,7 @@ These commands create an environment for python just for this project in SSED/en
 
 # Project description
 
-Yeah, so this project started as my master thesis in, get this, *Electronic System Design*, oh the places you'll go. I really don't think I can make a better explanation of the theory stuff than I've done in the thesis theory stuff and methodology section, so I'll just recommend reading that if you need some background theory on this stuff. Don't worry, these sections are mostly pictures, as I'm not good with getting ideas in my head through words either.
+Yeah, so this project started as my master thesis in, get this, *Electronic System Design*, oh the places you'll go. I really don't think I can make a better explanation of the theory stuff than I've done in the thesis theory section and methodology section, so I'll just recommend reading that if you need some background theory on this stuff or some nice figures. Don't worry, these sections are mostly pictures, as I'm not good with getting ideas in my head through words either.
 
 
 # Docker setup
