@@ -11,18 +11,21 @@ I've already added a dataset, and the standard cfg-object in classifier/config/d
 
 ```bash
 git clone https://github.com/bendikbo/SSED.git
+cd SSED
 mkdir env
 python3 -m venv env
 . env/bin/activate
 pip install -r requirements.txt
 python train.py configs/default.yaml
 ```
-assuming you have a somewhat new version of python3 already installed.
+Assuming you have a somewhat new version of python3 already installed, and has installed the virtualenv package.
 
+**In case you're new to python virtual environments**
+These commands create an environment for python just for this project in SSED/env, normally this is done so that you don't need to worry about messing up your baseline python environment to run the code and fuck up all your dependencies. This is the smartest move, I promise. You also could set up an anaconda environment, but there's some stuff in requirements.txt that isn't supported by the package manager for anaconda, and I found it a hassle to deal with, so I'm sticking to pip.
 
 # Project description
 
-TODO: add pdf of project thesis
+Yeah, so this project started as my master thesis in, get this, *Electronic System Design*, oh the places you'll go. I really don't think I can make a better explanation of the theory stuff than I've done in the thesis theory stuff and methodology section, so I'll just recommend reading that if you need some background theory on this stuff. Don't worry, these sections are mostly pictures, as I'm not good with getting ideas in my head through words either.
 
 
 # Docker setup
