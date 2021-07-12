@@ -21,6 +21,7 @@ python train.py configs/default.yaml
 Assuming you have a somewhat new version of python3 already installed, and has installed the virtualenv package.
 
 **In case you're new to python virtual environments**
+
 These commands create an environment for python just for this project in SSED/env, normally this is done so that you don't need to worry about messing up your baseline python environment to run the code and fuck up all your dependencies. This is the smartest move, I promise. You also could set up an anaconda environment, but there's some stuff in requirements.txt that isn't supported by the package manager for anaconda, and I found it a hassle to deal with, so I'm sticking to pip.
 
 # Project description
