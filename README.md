@@ -3,10 +3,7 @@
 This repository contains a sliding window sound event detection system developed for a master thesis at NTNU IES, with contributions by NINA - Norsk Institutt for NAturfroskning.
 
 The codebase contains multiple backbones, and is (almost) fully configurable in both training and inference through yaml specified configurations.
-
-
-# Sound Event Detection
-
+This codebase should be easily extendable and reusable for most sound event detection tasks, and I hope you get good use of it, just remember I've licensed it under the MIT License.
 
 
 # Project description
