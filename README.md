@@ -24,6 +24,32 @@ Assuming you have a somewhat new version of python3 already installed, and has i
 
 These commands create an environment for python just for this project in SSED/env, normally this is done so that you don't need to worry about messing up your baseline python environment to run the code and fuck up all your dependencies. This is the smartest move, I promise. You also could set up an anaconda environment, but there's some stuff in requirements.txt that isn't supported by the package manager for anaconda, and I found it a hassle to deal with, so I'm sticking to pip.
 
+# Howto create "state of the art model" with your own data
+
+Okay, so you have a problem where you actually need to create your own * *state of the art* * model for sound event detection, because of reasons. No worries! I'll take you through the steps of doing it right here.
+
+**1. Creating annotations for a dataset**
+First of all you need to annotate your dataset, I recommend using audacity for this, as it has built-in spectrogram support, hotkeys for labeling (ctrl+B), in addition to a ton of other cool functionalities. Ater you're done with labeling an audio file, you need to split it into chunks more suitable for training a classifier. Use the script in scripts/create_dataset.py for exactly this purpose, it splits your source audio files into .wav files and .csv files containing descriptions of your sound events.
+
+**2. Write dataset for your data**
+Writing datasets in pytorch is (somewhat) easy, you need to make an inherited class of torch.utils.data.Dataset, overwriting two functions:
+
+```python
+from torch.utils.data import Dataset as dataset
+import os
+
+class mydataset(dataset):
+  def __init__(self, cfg):
+    #Get a list of all source files here
+    #e.g. (given that you've made a cfgnode as cfg.INPUT.SOURCE_PATH)
+    self.source_files = os.listdir(cfg.INPUT.SOURCE_DIR)
+    self.source_files = [cfg.INPUT.SOURCE_DIR + source_file for source_file in self.source_files]
+  def __len__(self):
+    return len(source_files)
+    
+```
+
+
 # Project description
 
 Yeah, so this project started as my master thesis in, get this, *Electronic System Design*, oh the places you'll go. I really don't think I can make a better explanation of the theory stuff than I've done in the thesis theory section and methodology section, so I'll just recommend reading that if you need some background theory on this stuff or some nice figures. Don't worry, these sections are mostly pictures, as I'm not good with getting ideas in my head through words either.
