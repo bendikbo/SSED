@@ -1,3 +1,4 @@
+#yacs is licensed under apache 2.0, which can be found in the LICENSES-directory.
 from yacs.config import CfgNode as CN
 
 cfg = CN()
