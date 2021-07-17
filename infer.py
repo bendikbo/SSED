@@ -110,7 +110,7 @@ class Inferencer:
                     processed_preds[-num_hops+1:,:]
                     )
                 #Flip it around and bring it back
-                edge_multiplier = torch.div(denominator, numerator)
+                edge_multiplier = torch.div(numerator, denominator)
                 processed_preds[0:num_hops-1,:]+=\
                 torch.mul(
                     edge_multiplier,
