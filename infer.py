@@ -83,9 +83,9 @@ class Inferencer:
                 all_raw_preds[indices] = preds
             num_hops = self.cfg.INFERENCE.HOPS_PER_WINDOW
 
-            #processed_preds.dim() == (predictions_per_file + num_hops, num_classes)
+            #processed_preds.dim() == (predictions_per_file + num_hops - 1, num_classes)
             processed_preds = torch.zeros(
-                (all_raw_preds.dim()[0]+num_hops,
+                (all_raw_preds.dim()[0]+num_hops - 1,
                 all_raw_preds.dim()[1])
             )
             #For loop to make processes preds into moving average
