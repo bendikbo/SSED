@@ -50,7 +50,6 @@ def save_checkpoint(state_dict: dict,
     list_path = filepath.parent.joinpath("latest_checkpoint")
     torch.save(state_dict, filepath)
     if is_best:
-        print("new best model saved")
         torch.save(state_dict, filepath.parent.joinpath("best.ckpt"))
     previous_checkpoints = get_previous_checkpoints(filepath.parent)
     if filepath.name not in previous_checkpoints:

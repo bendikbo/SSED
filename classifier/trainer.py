@@ -62,7 +62,6 @@ class Trainer:
             """
             validation_losses = list(self.VALIDATION_LOSS.values())
             if validation_losses[-1] == min(validation_losses):
-                print(f"NEW BEST VAL LOSS: {validation_losses[-1]}")
             return validation_losses[-1] == min(validation_losses)
         state_dict = self.model.state_dict()
         filepath = self.checkpoint_dir.joinpath(f"{self.global_step}.ckpt")
