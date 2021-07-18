@@ -18,12 +18,13 @@ class ToSampleCoords(nn.Module):
         if hasattr(cfg, "SAMPLE_RATE"):
             self.sample_rate = cfg.SAMPLE_RATE
     def forward(self, x, lines=None, labels=None):
-        for idx, annotation in enumerate(lines):
-            onset = annotation[0]
-            offset = annotation[1]
-            new_onset = np.ceil(onset*self.sample_rate)
-            new_offset = np.floor(offset*self.sample_rate)
-            lines[idx] = [new_onset, new_offset]
+        if lines is not None:
+            for idx, annotation in enumerate(lines):
+                onset = annotation[0]
+                offset = annotation[1]
+                new_onset = np.ceil(onset*self.sample_rate)
+                new_offset = np.floor(offset*self.sample_rate)
+                lines[idx] = [new_onset, new_offset]
         return x, lines, labels
 
 

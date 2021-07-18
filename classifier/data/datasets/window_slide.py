@@ -26,8 +26,8 @@ class WindowSlide(torch.utils.data.Dataset):
                 new_freq=self.sample_rate
             )
             self.record = self.resampler(self.record)
-        if self.record.
-
+        if self.record.size()[0] != 1:
+            self.record = torch.mean(self.record, dim=0).unsqueeze(0)
     def __getitem__(self, idx):
         audio_bit_start = min(
             self.record.size()[0] - self.input_length,
@@ -39,6 +39,7 @@ class WindowSlide(torch.utils.data.Dataset):
             audio_bit_start,
             self.input_length
         )
+        audio_bit, _, _ = self.transform(audio_bit)
         return audio_bit, idx
 
     def __len__(self):

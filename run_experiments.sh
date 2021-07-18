@@ -7,7 +7,7 @@
 cd "$(dirname "$0")"
 proj_dir=$(dirname "$0")
 conf_dir="configs"
-experiment_dir="window_size_thr_2"
+experiment_dir="$1"
 #Cange experiment dir to run with config files in your chosen directory
 for config_file in "${proj_dir}/${conf_dir}/${experiment_dir}"/*
 do
