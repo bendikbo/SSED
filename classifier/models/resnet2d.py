@@ -1,5 +1,5 @@
 import torch.nn as nn
-from torchvision.models import resnet50
+from torchvision.models import resnet50, resnet34
 from collections.abc import Iterable
 
 class ResNet50BB(nn.Module):
