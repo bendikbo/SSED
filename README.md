@@ -3,9 +3,11 @@
 This repository contains a sliding window sound event detection system developed for a master thesis at NTNU IES, with contributions by NINA - Norsk Institutt for NAturfroskning.
 
 The codebase contains multiple convolutional backbones, and is (almost) fully configurable in both training and inference through yaml specified configurations.
-This codebase should be easily extendable and reusable for most sound event detection tasks, and I hope you get good use of it, just remember I've licensed it under the MIT License.
+This codebase should be easily extendable and reusable for most sound event detection tasks, and I hope you get good use of it, just remember I've licensed it under the MIT License, and a lot of the other stuff that I've used used is licensed under several other licenses as well (can be found in the LICENSES subdirectory), read up on those so you don't get hit with a C&D.
 
-# Example application
+Send me an email if you have any questions I could probably help answer: bendik.bogfjellmo@gmail.com
+
+# Example application with existing backbones and datasets
 
 I've already added a dataset, and the standard cfg-object in classifier/config/defaults.py should lead to the main training script automatically downloading this dataset and starting a training session once downloaded and extracted. So the full list of bash terminal commands to train a (somewhat) state of the art sound event detection system for the bird sounds in the dataset should be as simple as:
 
@@ -20,6 +22,14 @@ python train.py configs/default.yaml
 ```
 Assuming you have a somewhat new version of python3 already installed, and has installed the virtualenv package.
 
+Then to run inferrence with the model you've trained:
+
+```bash
+python infer.py configs/default.yaml path/to/audio_file.wav
+```
+
+This trains an EfficientNet based model on the datasets I've added, with the basic config file, and runs inference based on the model you've trained.
+
 **In case you're new to python virtual environments**
 
 These commands create an environment for python just for this project in SSED/env, normally this is done so that you don't need to worry about messing up your baseline python environment to run the code and fuck up all your dependencies. This is the smartest move, I promise. You also could set up an anaconda environment, but there's some stuff in requirements.txt that isn't supported by the package manager for anaconda, and I found it a hassle to deal with, so I'm sticking to pip.
@@ -30,7 +40,7 @@ Okay, so you have a problem where you actually need to create your own * *state 
 
 **1. Creating annotations for a dataset**
 
-First of all you need to annotate your dataset, I recommend using audacity for this, as it has built-in spectrogram support, hotkeys for labeling (ctrl+B), in addition to a ton of other cool functionalities. This part is the most boring part of your job, and it's probably not weird that * *data scientists* * (whatever that means) never do this job themselves. After you're done with labeling an audio file, you need to split it into chunks more suitable for training a classifier. Use the script in scripts/create_dataset.py for exactly this purpose, it splits your source audio files into .wav files and .csv files containing descriptions of your sound events.
+First of all you need to annotate your dataset, I recommend using audacity for this, as it has built-in spectrogram support, hotkeys for labeling (ctrl+B), in addition to a ton of other cool functionalities. This part is the most boring part of your job, and it's the reason that * *data scientists* * (whatever that means) never do this job themselves. After you're done with labeling an audio file, you need to split it into chunks more suitable for training a classifier. Use the script in scripts/create_dataset.py (TODO:add this) for exactly this purpose, it splits your source audio files into .wav files and .csv files containing descriptions of your sound events.
 
 **2. Write dataset for your data**
 
@@ -89,10 +99,6 @@ class mydataset(dataset):
 Yeah, so this project started as my master thesis in, get this, *Electronic System Design*, oh the places you'll go. I really don't think I can make a better explanation of the theory stuff than I've done in the thesis theory section and methodology section, so I'll just recommend reading that if you need some background theory on this stuff or some nice figures. Don't worry, these sections are mostly pictures, as I'm not good with getting ideas in my head through words either.
 
 
-# Docker setup
-
-TODO: add description of how to set up docker
-
 # Data augmentation and feature engineering
 
 The AudioTransformer class, found within classifier/data/transform/transforms.py is an extendable, reusable, automatically configurable tool that comes with some limitations and expectations of added functionality. To set the stage for possible reusability and/or extendability, it's useful to mention some of the assumptions the class makes if new transforms are to be added to it.
@@ -104,3 +110,14 @@ The forwarding arguments for every transformation class is assumed to be x, line
 **Support for pure classification problems**
 
 In the interest of supporting pure classification problems, especially mutual exclusive classification problems, where neither lines nor labels probably need to be forwarded, as in most cases of such problems the class of the underlying data remains constant no matter how it's augmented, there is an option to only forward the x-tensor through any instance of the AudioTransformer-class. Therefore, each class currently needs to have a special case where lines=None and labels=None, where the module does not do any line or label readjustment that would otherwise be necessary with transforms like the time shifting transform. This means that if lines and labels are to be augmented, it's best to leave an if statement in the style of the following snippet.
+
+# TODOs
+
+**Add more datasets!**
+I'm always eager to expand this project! HMU if you've got a dataset you want to add, I'll even host it on my own google drive and add a download script to automate the process for newcomers.
+
+**Make website for user interface**
+Most end users of this system are probably not extremely tech savvy folks, so I think it would benefit the projet to add code for hosting a webservice where a user can drag and drop audio files and get their annotations sent by email or something like that.
+
+**Add some docker stuff**
+Sadly, not everyone runs linux; nah just kidding, but I do, and the codebase in this project assumes you do to, so I should probably add some docker stuff for this project so everyone can use it.
