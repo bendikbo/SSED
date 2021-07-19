@@ -30,7 +30,7 @@ Okay, so you have a problem where you actually need to create your own * *state 
 
 **1. Creating annotations for a dataset**
 
-First of all you need to annotate your dataset, I recommend using audacity for this, as it has built-in spectrogram support, hotkeys for labeling (ctrl+B), in addition to a ton of other cool functionalities. This part is the most boring part of your job, and it's probably not weird that * *data scientists* * (whatever that means) never do this job themselves. After you're done with labeling an audio file, you need to split it into chunks more suitable for training a classifier. Use the script in scripts/create_dataset.py for exactly this purpose, it splits your source audio files into .wav files and .csv files containing descriptions of your sound events.
+First of all you need to annotate your dataset, I recommend using audacity for this, as it has built-in spectrogram support, hotkeys for labeling (ctrl+B), in addition to a ton of other cool functionalities. This part is the most boring part of your job, and it's the reason that * *data scientists* * (whatever that means) never do this job themselves. After you're done with labeling an audio file, you need to split it into chunks more suitable for training a classifier. Use the script in scripts/create_dataset.py for exactly this purpose, it splits your source audio files into .wav files and .csv files containing descriptions of your sound events.
 
 **2. Write dataset for your data**
 
