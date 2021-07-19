@@ -3,7 +3,9 @@
 This repository contains a sliding window sound event detection system developed for a master thesis at NTNU IES, with contributions by NINA - Norsk Institutt for NAturfroskning.
 
 The codebase contains multiple convolutional backbones, and is (almost) fully configurable in both training and inference through yaml specified configurations.
-This codebase should be easily extendable and reusable for most sound event detection tasks, and I hope you get good use of it, just remember I've licensed it under the MIT License.
+This codebase should be easily extendable and reusable for most sound event detection tasks, and I hope you get good use of it, just remember I've licensed it under the MIT License, and a lot of the other stuff that's used is licensed as well.
+
+Send me an email if you have any questions I could probably help answer: bendik.bogfjellmo@gmail.com
 
 # Example application with existing backbones and datasets
 
@@ -25,6 +27,8 @@ Then to run inferrence with the model you've trained:
 ```bash
 python infer.py configs/default.yaml path/to/audio_file.wav
 ```
+
+This trains an EfficientNet based model on the datasets I've added, with the basic config file, and runs inference based on the model you've trained.
 
 **In case you're new to python virtual environments**
 
@@ -95,10 +99,6 @@ class mydataset(dataset):
 Yeah, so this project started as my master thesis in, get this, *Electronic System Design*, oh the places you'll go. I really don't think I can make a better explanation of the theory stuff than I've done in the thesis theory section and methodology section, so I'll just recommend reading that if you need some background theory on this stuff or some nice figures. Don't worry, these sections are mostly pictures, as I'm not good with getting ideas in my head through words either.
 
 
-# Docker setup
-
-TODO: add description of how to set up docker
-
 # Data augmentation and feature engineering
 
 The AudioTransformer class, found within classifier/data/transform/transforms.py is an extendable, reusable, automatically configurable tool that comes with some limitations and expectations of added functionality. To set the stage for possible reusability and/or extendability, it's useful to mention some of the assumptions the class makes if new transforms are to be added to it.
@@ -110,3 +110,14 @@ The forwarding arguments for every transformation class is assumed to be x, line
 **Support for pure classification problems**
 
 In the interest of supporting pure classification problems, especially mutual exclusive classification problems, where neither lines nor labels probably need to be forwarded, as in most cases of such problems the class of the underlying data remains constant no matter how it's augmented, there is an option to only forward the x-tensor through any instance of the AudioTransformer-class. Therefore, each class currently needs to have a special case where lines=None and labels=None, where the module does not do any line or label readjustment that would otherwise be necessary with transforms like the time shifting transform. This means that if lines and labels are to be augmented, it's best to leave an if statement in the style of the following snippet.
+
+# TODOs
+
+**Add more datasets!**
+I'm always eager to expand this project! HMU if you've got a dataset you want to add, I'll even host it on my own google drive and add a download script to automate the process for newcomers.
+
+**Make website for user interface**
+Most end users of this system are probably not extremely tech savvy folks, so I think it would benefit the projet to add code for hosting a webservice where a user can drag and drop audio files and get their annotations sent by email or something like that.
+
+**Add some docker stuff**
+Sadly, not everyone runs linux; nah just kidding, but I do, and the codebase in this project assumes you do to, so I should probably add some docker stuff for this project so everyone can use it.
