@@ -13,10 +13,10 @@ class WindowSlide(torch.utils.data.Dataset):
                 audio_file:str
                 ):
         assert os.path.exists(audio_file)
-        self.input_length = cfg.RECORD_LENGTH
+        self.input_length = cfg.INPUT.RECORD_LENGTH
         hops_per_window = getattr(cfg.INFERENCE, "HOPS_PER_WINDOW", 4)
         self.hop_size = self.input_length // hops_per_window
-        self.transform = AudioTransformer(cfg.TRANSFORM, is_train=False)
+        self.transform = AudioTransformer(cfg.INPUT.TRANSFORM, is_train=False)
         self.sample_rate = cfg.INPUT.SAMPLE_FREQ
         self.record, fs = torchaudio.load(audio_file)
         #In case of stereo or not correct sample rate, resample to fit model
@@ -30,12 +30,12 @@ class WindowSlide(torch.utils.data.Dataset):
             self.record = torch.mean(self.record, dim=0).unsqueeze(0)
     def __getitem__(self, idx):
         audio_bit_start = min(
-            self.record.size()[0] - self.input_length,
+            self.record.size()[1] - self.input_length,
             idx * self.hop_size
         )
         audio_bit = torch.narrow(
             self.record,
-            0,
+            1,
             audio_bit_start,
             self.input_length
         )
@@ -43,5 +43,5 @@ class WindowSlide(torch.utils.data.Dataset):
         return audio_bit, idx
 
     def __len__(self):
-        return int(np.ceil(self.record.size()[0] / self.hop_size))
+        return int(np.ceil(self.record.size()[1] / self.hop_size))
 

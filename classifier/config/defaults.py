@@ -109,7 +109,8 @@ cfg.DATASET_DIR = "datasets"
 cfg.INFERENCE = CN()
 #Hops per window should probably be around 1/MODEL.THRESHOLD
 cfg.INFERENCE.HOPS_PER_WINDOW = 4
-cfg.INFERENCE.OUTPUT_DIR = "inference/"
-cfg.INFERENCE.BATCH_SIZE = 32
+cfg.INFERENCE.OUTPUT_DIR = "predictions/"
+cfg.INFERENCE.BATCH_SIZE = 64
 cfg.INFERENCE.OUTPUT_FORMAT = "audacity"
 cfg.INFERENCE.THRESHOLD = 0.6
+cfg.INFERENCE.NUM_WORKERS = 8 #slidingwindow class is more memory intensive
