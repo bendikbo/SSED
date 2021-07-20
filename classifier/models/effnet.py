@@ -1,3 +1,6 @@
+#This file is licensed under LGPL V3
+#License can be found in the subdir "LICENSES"
+
 from efficientnet_pytorch import EfficientNet
 
 
