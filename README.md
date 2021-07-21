@@ -7,7 +7,7 @@ This codebase should be easily extendable and reusable for most sound event dete
 
 Send me an email if you have any questions I could probably help answer: bendik.bogfjellmo@gmail.com
 
-An acknowledgement and huge thanks has to be given to Håkon Hukkelås, as this had been developed from different parts of the skeleton code he gives out for the subject he sort of runs "TDT4265 - Computer Vision and Deep Learning". We're all standing on the shoulders of giants, and this is a shoulder I've been standing on, really reccommend checking his stuff out: https://github.com/hukkelas, guy is one of the more talented programmers I've had the pleasures of seeing the works of.
+An acknowledgement and huge thanks has to be given to Håkon Hukkelås, as this had been developed from different parts of the skeleton code he gives out for the subject he partly runs runs at NTNU "TDT4265 - Computer Vision and Deep Learning". We're all standing on the shoulders of giants, and this is a shoulder I've been standing on, really reccommend checking his stuff out: https://github.com/hukkelas, guy is one of the more talented programmers I've had the pleasures of seeing the works of.
 
 # Example application with existing backbones and datasets
 
