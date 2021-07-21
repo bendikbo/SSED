@@ -134,3 +134,7 @@ Most end users of this system are probably not extremely tech savvy folks, so I 
 **Add some docker stuff**
 
 Sadly, not everyone runs linux; nah just kidding, but I do, and the codebase in this project assumes you do to, so I should probably add some docker stuff for this project so everyone can use it, despite using other operating systems.
+
+**Optimize for inferrence speed**
+
+The inferrence speed is, putting it lightly, somewhat abysmal. Most of the inferrence timing is used for creating spectrograms (educated guess), making huge spectrograms, slicing these for inferrence, is probably a better approach than creating num_hops spectrograms for every time sequence. Currently, model complexity is not the major bottleneck when inferring, it'll probably be a good idea to change this before making industrial sized practical applications of this piece of steaming hot garbage.
