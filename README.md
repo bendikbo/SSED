@@ -116,6 +116,12 @@ In the interest of supporting pure classification problems, especially mutual ex
 **Add more datasets!**
 I'm always eager to expand this project! HMU if you've got a dataset you want to add, I'll even host it on my own google drive and add a download script to automate the process for newcomers.
 
+**Add EfficientNetV2 to backbones**
+EfficientNetV2 yielded some improvements on the original, so it should probably be added as a model.
+
+**Develop support for time and date in the inferrence script**
+The infer.py script does not take starting time into account at the moment, when making
+
 **Make website for user interface**
 Most end users of this system are probably not extremely tech savvy folks, so I think it would benefit the projet to add code for hosting a webservice where a user can drag and drop audio files and get their annotations sent by email or something like that.
 
