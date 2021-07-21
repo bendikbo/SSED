@@ -87,20 +87,19 @@ class Trainer:
         for epoch in range(self.epochs):
             self.epoch = epoch
             # Perform a full pass through all the training samples
-            print("Epoch: {} / {}".format(epoch+1,self.epochs))
             epoch_avg_loss = 0
             epoch_total_loss = 0
             self.model.train()
             i = 0
             print("learning rate: {}".format(self.optimizer.param_groups[0]['lr']))
             for x_batch, y_batch, _ in self.train_data:
-                # X_batch is the time series. Shape: [batch_size, OUTPUT_DIMS]
-                # Y_batch is the audio label. Shape: [batch_size, num_classes]
                 x_batch = to_cuda(x_batch)
                 y_batch = to_cuda(y_batch)
+                # X_batch is the time series. Shape: [batch_size, OUTPUT_DIMS]
+                # Y_batch is the audio label. Shape: [batch_size, num_classes]
                 # Perform the forward pass
                 predictions = self.model.forward(x_batch)
-                # Compute the cross entropy loss for the batch
+                # Compute loss
                 loss = self.loss_criterion(predictions, y_batch)
                 self.TRAIN_LOSS[self.global_step] = loss.detach().cpu().item()
                 epoch_total_loss += self.TRAIN_LOSS[self.global_step]
@@ -161,7 +160,7 @@ class Trainer:
         self.VALIDATION_RESULTS[self.global_step] = average_precisions
         self.VALIDATION_LOSS[self.global_step] = average_loss
         print(
-            f"Epoch: {self.epoch}\n",
+            f"Epoch: {self.epoch + 1}\n",
             f"Global step: {self.global_step}\n",
             f"Validation Loss: {average_loss}\n",
             sep="\t")
@@ -180,7 +179,7 @@ class Trainer:
         self.validation_epoch()
         average_precisions, average_loss = self.compute_mAP(self.test_data)
         print(
-            f"Epoch: {self.epoch}\n",
+            f"Epoch: {self.epoch + 1}\n",
             f"Global step: {self.global_step}\n",
             f"Test Loss: {average_loss}\n",
             sep="\t")

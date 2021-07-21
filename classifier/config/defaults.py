@@ -10,21 +10,19 @@ cfg.MODEL = CN()
 cfg.MODEL.THRESHOLD = 0.25
 cfg.MODEL.NUM_CLASSES = 5
 
-# Hard negative mining configurations
-cfg.MODEL.NEG_POS_RATIO = 3
 
 # ---------------------------------------------------------------------------- #
 # Model name
 # ---------------------------------------------------------------------------- #
 
-cfg.MODEL.NAME = 'effnetv2m'
+cfg.MODEL.NAME = 'efficientnet-b7'
 
 # -----------------------------------------------------------------------------
 # 
 # -----------------------------------------------------------------------------
 #Dataset setup
 cfg.INPUT = CN()
-cfg.INPUT.RECORD_LENGTH = 65536
+cfg.INPUT.RECORD_LENGTH = 40960
 cfg.INPUT.SAMPLE_FREQ = 16000
 cfg.INPUT.NAME = "kauto5cls"
 #Used in case of spectrogram
@@ -36,7 +34,7 @@ cfg.INPUT.TRANSFORM.SAMPLE_COORDS = CN()
 cfg.INPUT.TRANSFORM.SAMPLE_COORDS.ACTIVE = True
 cfg.INPUT.TRANSFORM.CROP = CN()
 cfg.INPUT.TRANSFORM.CROP.ACTIVE = True
-cfg.INPUT.TRANSFORM.LENGTH = 65536
+cfg.INPUT.TRANSFORM.LENGTH = 40960
 
 #Alright config for spectrogram
 cfg.INPUT.TRANSFORM.SPECTROGRAM = CN()
@@ -74,7 +72,7 @@ cfg.INPUT.TRANSFORM.RAND_CONTRAST.ENHANCE = 25
 # -----------------------------------------------------------------------------
 cfg.DATA_LOADER = CN()
 cfg.DATA_LOADER.NUM_WORKERS = 8
-cfg.DATA_LOADER.PIN_MEMORY = False
+cfg.DATA_LOADER.PIN_MEMORY = True
 
 # ---------------------------------------------------------------------------- #
 # Solver - The same as optimizer
@@ -96,10 +94,9 @@ cfg.TRAINER.ACTIVATION = "sigmoid"
 # Specific test options
 # ---------------------------------------------------------------------------- #
 cfg.TEST = CN()
-cfg.TEST.NMS_THRESHOLD = 0.5
-cfg.TEST.CONFIDENCE_THRESHOLD = 0.01
 cfg.TEST.BATCH_SIZE = 32
-cfg.LOG_STEP = 10
+
+
 cfg.OUTPUT_DIR = "outputs"
 cfg.DATASET_DIR = "datasets"
 
@@ -110,7 +107,7 @@ cfg.INFERENCE = CN()
 #Hops per window should probably be around 1/MODEL.THRESHOLD
 cfg.INFERENCE.HOPS_PER_WINDOW = 4
 cfg.INFERENCE.OUTPUT_DIR = "predictions/"
-cfg.INFERENCE.BATCH_SIZE = 64
+cfg.INFERENCE.BATCH_SIZE = 128
 cfg.INFERENCE.OUTPUT_FORMAT = "audacity"
-cfg.INFERENCE.THRESHOLD = 0.6
-cfg.INFERENCE.NUM_WORKERS = 8 #slidingwindow class is more memory intensive
+cfg.INFERENCE.THRESHOLD = 0.76
+cfg.INFERENCE.NUM_WORKERS = 8

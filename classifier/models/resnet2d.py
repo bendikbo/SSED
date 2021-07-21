@@ -28,7 +28,7 @@ class ResNet34BB(nn.Module):
     Resnet34 classifier class
     """
     def __init__(self, cfg):
-        super(ResNet50BB, self).__init__()
+        super(ResNet34BB, self).__init__()
         if getattr(cfg, "PRETRAINED", True) == False:
             self.pretrained = False
         else:

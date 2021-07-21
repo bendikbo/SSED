@@ -23,7 +23,7 @@ from classifier.config.defaults import cfg
 from classifier.utils import to_cuda
 from classifier.utils import load_best_checkpoint
 from classifier.data.datasets.window_slide import WindowSlide
-
+import time
 
 
 class Inferencer:
@@ -32,7 +32,7 @@ class Inferencer:
         cfg,
         audio_files: list
         ):
-
+        self.start_time = time.time()
         self.cfg = cfg
         self.audio_files = audio_files
         self.dataloaders = []
@@ -65,6 +65,7 @@ class Inferencer:
     
     def infer(self):
         for audio_file, dataloader in zip(self.audio_files, self.dataloaders):
+            self.start_time = time.time() #For performance measurements
             #output filename
             output_filename = audio_file.split("/")[-1].split(".")[0]
             #Instantiating predictions for entire audio file
@@ -181,6 +182,7 @@ class Inferencer:
         output_path = self.cfg.INFERENCE.OUTPUT_DIR + output_filename + ".csv"
         df.to_csv(output_path)
         print(f"\n\nFinished inference on: {output_filename}")
+        print(f"time used: {time.time() - self.start_time}")
         print(f"ouput stored as: {output_path}")
 
     def write_audacity_labels(
@@ -203,6 +205,7 @@ class Inferencer:
         out_file.write(stuff_to_write)
         out_file.close()
         print(f"\n\nFinished inference on: {output_filename}")
+        print(f"time used: {time.time() - self.start_time}")
         print(f"ouput stored as: {output_path}")
 
 
