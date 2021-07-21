@@ -137,4 +137,4 @@ Sadly, not everyone runs linux; nah just kidding, but I do, and the codebase in 
 
 **Optimize for inferrence speed**
 
-The inferrence speed is, putting it lightly, somewhat abysmal. Most of the inferrence timing is used for creating spectrograms (educated guess), making huge spectrograms, slicing these for inferrence, is probably a better approach than creating num_hops spectrograms for every time sequence. Currently, model complexity is not the major bottleneck when inferring, it'll probably be a good idea to change this before making industrial sized practical applications of this piece of steaming hot garbage.
+The inferrence speed is, putting it lightly, somewhat abysmal (8 mins for 24h audio when inferring on a RTX3090). Most of the inferrence timing is used for creating spectrograms (educated guess), making huge spectrograms, slicing these for inferrence, is probably a better approach than creating num_hops spectrograms for every time sequence. Currently, model complexity is not the major bottleneck when inferring, it'll probably be a good idea to change this before making industrial sized practical applications of this piece of steaming hot garbage.
