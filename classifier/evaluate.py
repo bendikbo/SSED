@@ -5,13 +5,17 @@ Written as part of master thesis by Bendik Bogfjellmo
 """
 import torch
 from statistics import mean
+from matplotlib import pyplot as plt
 
 
 def _calculate_AP(
     class_predictions: torch.Tensor,
     class_targets: torch.Tensor,
     recall_vals = 1000,
-    conf_vals = 1000
+    conf_vals = 1000,
+    plot_curves=False,
+    plot_name="",
+    plot_recall_start=0.6
     ):
     """
     calculates average precision for a single class
@@ -57,24 +61,68 @@ def _calculate_AP(
             final_precisions[i] = 0
         else:
             final_precisions[i] = torch.max(recall_level_precisions)
+    if plot_curves:
+        plot_pr_curves(final_precisions, recall_levels, plot_name, plot_recall_start)
     return torch.mean(final_precisions)
-            
 
 
-def calculate_mAP(predictions: torch.Tensor, targets : torch.Tensor):
+
+def plot_pr_curves(
+    precisions,
+    recalls,
+    plot_name,
+    plot_recall_start
+    ):
+    """
+    Function to plot precision-recall curves
+    Input:
+    precisions - precisions at each recall point
+    recalls - recalls at each recall point
+    plot_recall_start - where at the recall axis to start the plot
+    """
+    y = precisions.tolist()
+    x = recalls.tolist()
+    plt.plot(x, y)
+    plt.ylabel("Interpolated precision")
+    plt.xlabel("Recall")
+    plt.xlim(plot_recall_start, 1.00)
+    plt.ylim(0.8, 1.0)
+    plt.savefig(plot_name + ".pdf", format="pdf")
+    plt.clf()
+
+
+def calculate_mAP(
+    predictions: torch.Tensor,
+    targets : torch.Tensor,
+    plot_curves=False,
+    dereference_dict={}
+    ):
     """
     calculates mean average precision based on predictions and targets.
     Arguments:
-    - Predictions   : torch.Tensor in shape of [num_preds, num_classes]
-    - Targets       : torch.Tensor in shape of [num_targets, num_classes]
+    - predictions   : torch.Tensor in shape of [num_preds, num_classes]
+    - targets       : torch.Tensor in shape of [num_targets, num_classes]
     where num_targets == num_preds
+    - plot_curves   : bool, decides wether precision/recall curves
+    should be plotted, plots are stored as pdfs in folder where
+    original scirpt has been called from
+    - dereference_dict: dictionary to dereference from number to class name
     """
     ap_vals = {}
     for i in range(targets.size()[-1]):
         #print(f"class: {i}")
         class_predictions   = predictions[:, i]
         class_targets       = targets[:,i]
-        class_AP = _calculate_AP(class_predictions, class_targets)
+        if plot_curves:
+            plot_name=dereference_dict[i]
+        else:
+            plot_name = ""
+        class_AP = _calculate_AP(
+            class_predictions,
+            class_targets,
+            plot_curves = plot_curves,
+            plot_name = plot_name
+            )
         #Tensors are a bit annoying to work without significant payoff.
         ap_vals[i] = float(class_AP)
     ap_vals["mAP"] = mean(ap_vals.values())

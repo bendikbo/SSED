@@ -6,7 +6,7 @@ import time
 import torch.nn as nn
 from classifier.utils import to_cuda, save_checkpoint, load_best_checkpoint
 from classifier.evaluate import calculate_mAP
-
+from classifier.data.datasets import dereference_dict
 
 class Trainer:
     """
@@ -40,7 +40,7 @@ class Trainer:
         self.loss_criterion = nn.BCEWithLogitsLoss()
         self.model = to_cuda(model)
         self.train_data, self.val_data, self.test_data = dataloaders
-
+        self.dereference_dict = dereference_dict(cfg.INPUT.NAME)
         #Metric tracking
         self.VALIDATION_LOSS = collections.OrderedDict()
         self.TEST_LOSS = collections.OrderedDict()
@@ -54,7 +54,7 @@ class Trainer:
 
     def save_model(self):
         """
-        Saves current model 
+        Saves current model in cfg.OUTPUT_DIR
         """
         def is_best_model():
             """
@@ -95,9 +95,9 @@ class Trainer:
             for x_batch, y_batch, _ in self.train_data:
                 x_batch = to_cuda(x_batch)
                 y_batch = to_cuda(y_batch)
-                # X_batch is the time series. Shape: [batch_size, OUTPUT_DIMS]
+                # X_batch is the time series after transforms.
+                #Shape: [batch_size, TRANSFORM_OUTPUT_DIMS]
                 # Y_batch is the audio label. Shape: [batch_size, num_classes]
-                # Perform the forward pass
                 predictions = self.model.forward(x_batch)
                 # Compute loss
                 loss = self.loss_criterion(predictions, y_batch)
@@ -121,9 +121,10 @@ class Trainer:
             self.lr_scheduler.step()
         self.end_evaluation()
     
-    def compute_mAP(self, dataloader):
+    def compute_mAP(self, dataloader, plot_curves=False):
         """
         Computes the mean Average Precision for a given dataloader
+        for a multilabel classifier.
         """
         average_loss = 0
         total_loss = 0
@@ -148,22 +149,33 @@ class Trainer:
                     (all_targets, y_batch),
                     dim = 0
                 )
-            average_precisions = calculate_mAP(all_predictions, all_targets)
+            average_precisions = calculate_mAP(
+                all_predictions,
+                all_targets,
+                plot_curves,
+                self.dereference_dict
+                )
             average_loss = total_loss/total_batches
         return average_precisions, average_loss
 
-    def validation_epoch(self):
+    def validation_epoch(self, plot_pr_curves=False):
         """
             Computes the loss/accuracy for validation dataset
+            Can conditionally plot precision-recall curves
+            for each class if plot_pr_curves is set to true
         """
-        average_precisions, average_loss = self.compute_mAP(self.val_data)
+        average_precisions, average_loss = self.compute_mAP(
+            self.val_data,
+            plot_curves=last_val
+        )
         self.VALIDATION_RESULTS[self.global_step] = average_precisions
         self.VALIDATION_LOSS[self.global_step] = average_loss
         print(
             f"Epoch: {self.epoch + 1}\n",
             f"Global step: {self.global_step}\n",
             f"Validation Loss: {average_loss}\n",
-            sep="\t")
+            sep="\t"
+        )
         self.print_precisions(average_precisions)
         log = open(self.log_path,"a+")
         log.write(f"time: {str(time.time())}\n")
@@ -174,6 +186,11 @@ class Trainer:
         log.close()
 
     def end_evaluation(self):
+        """
+        Evaluation performed after training
+        Will load the best model, currently set to the model
+        with the lowest validation loss.
+        """
         self.load_best_model()
         self.model.eval()
         self.validation_epoch()

@@ -11,7 +11,7 @@ def dereference_dict(name:str):
         kauto_dict = {
             0   :   "woosan-song",
             1   :   "comsnip-winnow",
-            2   :   "whimbr-song",
+            2   :   "whimbr1-song",
             3   :   "eugplo-call",
             4   :   "eugplo-song"
         }
