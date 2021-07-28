@@ -7,6 +7,8 @@ This codebase should be easily extendable and reusable for most sound event dete
 
 Send me an email if you have any questions I could probably help answer: bendik.bogfjellmo@gmail.com
 
+An acknowledgement and huge thanks has to be given to Håkon Hukkelås, as this had been developed from different parts of the skeleton code he gives out for the subject he partly runs runs at NTNU "TDT4265 - Computer Vision and Deep Learning". We're all standing on the shoulders of giants, and this is a shoulder I've been standing on, really reccommend checking his stuff out: https://github.com/hukkelas, guy is one of the more talented programmers I've had the pleasures of seeing the works of.
+
 # Example application with existing backbones and datasets
 
 I've already added a dataset, and the standard cfg-object in classifier/config/defaults.py should lead to the main training script automatically downloading this dataset and starting a training session once downloaded and extracted. So the full list of bash terminal commands to train a (somewhat) state of the art sound event detection system for the bird sounds in the dataset should be as simple as:
@@ -114,16 +116,25 @@ In the interest of supporting pure classification problems, especially mutual ex
 # TODOs
 
 **Add more datasets!**
+
 I'm always eager to expand this project! HMU if you've got a dataset you want to add, I'll even host it on my own google drive and add a download script to automate the process for newcomers.
 
 **Add EfficientNetV2 to backbones**
+
 EfficientNetV2 yielded some improvements on the original, so it should probably be added as a model.
 
 **Develop support for time and date in the inferrence script**
-The infer.py script does not take starting time into account at the moment, when making
+
+The infer.py script does not take starting time into account at the moment.
 
 **Make website for user interface**
+
 Most end users of this system are probably not extremely tech savvy folks, so I think it would benefit the projet to add code for hosting a webservice where a user can drag and drop audio files and get their annotations sent by email or something like that.
 
 **Add some docker stuff**
-Sadly, not everyone runs linux; nah just kidding, but I do, and the codebase in this project assumes you do to, so I should probably add some docker stuff for this project so everyone can use it.
+
+Sadly, not everyone runs linux; nah just kidding, but I do, and the codebase in this project assumes you do to, so I should probably add some docker stuff for this project so everyone can use it, despite using other operating systems.
+
+**Optimize for inferrence speed**
+
+The inferrence speed is, putting it lightly, somewhat abysmal (8 mins for 24h audio when inferring on a RTX3090). Most of the inferrence timing is used for creating spectrograms (educated guess), making huge spectrograms, slicing these for inferrence, is probably a better approach than creating num_hops spectrograms for every time sequence. Currently, model complexity is not the major bottleneck when inferring, it'll probably be a good idea to change this before making industrial sized practical applications of this piece of steaming hot garbage.
