@@ -2,7 +2,7 @@
 
 #Use this script to run through all configuration files
 #in a chosen directory. Script will run all training sessions
-#and dump the seission outputs as a log in outputs/
+#and dump the session outputs as a log in outputs/
 
 cd "$(dirname "$0")"
 proj_dir=$(dirname "$0")
