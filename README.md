@@ -30,7 +30,7 @@ Then to run inferrence with the model you've trained:
 python infer.py configs/default.yaml path/to/audio_file.wav
 ```
 
-This trains an EfficientNet based model on the datasets I've added, with the basic config file, and runs inference based on the model you've trained.
+This trains an EfficientNet-b7 based model on the dataset I've added, with the basic config file, and runs inference based on the model you've trained.
 
 **In case you're new to python virtual environments**
 
@@ -42,7 +42,7 @@ Okay, so you have a problem where you actually need to create your own * *state 
 
 **1. Creating annotations for a dataset**
 
-First of all you need to annotate your dataset, I recommend using audacity for this, as it has built-in spectrogram support, hotkeys for labeling (ctrl+B), in addition to a ton of other cool functionalities. This part is the most boring part of your job, and it's the reason that * *data scientists* * (whatever that means) never do this job themselves. After you're done with labeling an audio file, you need to split it into chunks more suitable for training a classifier. Use the script in scripts/create_dataset.py (TODO:add this) for exactly this purpose, it splits your source audio files into .wav files and .csv files containing descriptions of your sound events.
+First of all you need to annotate your dataset, I recommend using audacity for this, as it has built-in spectrogram support, hotkeys for labeling (ctrl+B), in addition to a ton of other cool functionalities. This part is the most boring part of your job, and it's the reason that * *data scientists* * (whatever that means) never do this job themselves. After you're done with labeling an audio file, you need to split it into chunks more suitable for training a classifier. Use the script in scripts/create_dataset.py (TODO:Generalize usability) for exactly this purpose, it splits your source audio files into .wav files and .csv files containing descriptions of your sound events.
 
 **2. Write dataset for your data**
 
@@ -75,7 +75,7 @@ class mydataset(dataset):
       else:
         self.audio_files.append(filename)
     self.transform = transformer(cfg, is_train = is_train)
-    self.target_transform = build_target_transform(cfg)
+    self.target_transform = build_target_transform(cfg.INPUT.TRANSFORM)
   def read_csv(self, csv_file):
     df = pd.read_csv(csv_file)
     onsets = df["onset"].to_list()
@@ -95,6 +95,13 @@ class mydataset(dataset):
     
 ```
 
+**Add stuff in the codebase for your dataset**
+Some stuff in the codebase requires that you add some new functionality, e.g. referencing and dereferencing class labels, so that the model can read numbers and the humans on the other side can read names.
+
+
+**4. Use your *special* source domain knowledge to make configurations that make sense for the problem you're solving**
+
+So, when I was doing my thesis on creating a model for bird sounds, I got a general sense of how a model should be configured to solve the problem, here are some key aspects that you'll probably need to take into account for your
 
 # Project description
 
