@@ -42,9 +42,34 @@ Okay, so you have a problem where you actually need to create your own * *state 
 
 **1. Creating annotations for a dataset**
 
-First of all you need to annotate your dataset, I recommend using audacity for this, as it has built-in spectrogram support, hotkeys for labeling (ctrl+B), in addition to a ton of other cool functionalities. This part is the most boring part of your job, and it's the reason that * *data scientists* * (whatever that means) never do this job themselves. After you're done with labeling an audio file, you need to split it into chunks more suitable for training a classifier. Use the script in scripts/create_dataset.py (TODO:Generalize usability) for exactly this purpose, it splits your source audio files into .wav files and .csv files containing descriptions of your sound events.
+First of all you need to annotate your dataset, I recommend using audacity for this, as it has built-in spectrogram support, hotkeys for labeling (ctrl+B), in addition to a ton of other cool functionalities (like watching spectrograms instead of listening through your audio, for easier annotation). I've got a scheme for annotation I've dubbed the "active window"-method, which you'll probably need to use if you're gonna use the rest of my code. The method allows to only annotate parts of an audio file, as long as you label the start of an annotated section of the file with "BEGIN" and the end of the annotated section with "END". 
 
-**2. Write dataset for your data**
+When labelling audio files, put them into a directory with the label files, where the directory, the audio file, and the label file all have the same name, except extensions. E.g. if you've got an audio file named birdsongs.wav, put it in a directory called birdsongs with the audacity label-file called birdsongs.txt.
+
+Then, when you've annotated lots of audio files, (e.g. birdsongs1.wav, birdsongs2.wav...) and have put all these into their respective directories named after them (e.g. birdsongs1, birdsongs2...), with their respective "active-window"-labelled audacity label files (birdsongs1.txt, birdsongs2.txt....) you're ready for step 2.
+
+
+**2. Preprocess data for dataset**
+Okay, so first you'll need to implement a dictionary converting your annotation classes into numbers (and then back into annotation names again), this is done in classifier/data/datasets/\_\_init\_\_.py, where you'll need to add a dictionary describing your dataset's classes within the dereference\_dict()-function.
+
+
+Then, use the script in classifier/create_dataset.py (TODO:Generalize usability) to preprocess your annotated data, it should split your source audio files into .wav files and .csv files containing descriptions of your sound events. You can play around with the script to create audio classes lasting different amount of time. The script should be called with a config file set up with your dataset name as cfg.INPUT.NAME. Below is an example yaml if your dataset name is "birdsongs", and all the directories containing wavs and txts are stored in a directory called "raw_audio_and_annotations".
+
+```yaml
+---
+INPUT:
+  NAME: "birdsongs"
+...
+```
+Let's say this yaml is saved in the configs directory as "birdsongs.yaml" (SSED/configs/birdsongs.yaml). Then below is the bash command to process the annotations given that you're currently in the SSED directory.
+
+```bash
+python scripts/create_dataset.py config/birdsongs.yaml raw_audio_and_annotations/
+```
+
+TODO:Fix dataset creation script so that this works. (Almost done)
+
+**3. Write dataset for your data**
 
 Writing datasets in pytorch is (somewhat) easy, you need to make an inherited class of torch.utils.data.Dataset, overwriting two functions, \_\_len\_\_ and \_\_getitem\_\_. Below is an example.
 ```python
@@ -95,16 +120,8 @@ class mydataset(dataset):
     
 ```
 
-**3. Add some key functionality in the codebase to support your dataset**
 
-Some stuff in the codebase requires that you add some new functionality to support your newly created dataset, below is an attempt to list all these places. If you're having issues, don't hesitate to reach out to me by email!
-
-*Adding your reference and dereference dictionary in classifier/data/datasets/\_\_init\_\_.py to their respective functions*
-
-This is used for the automated dataset creation script and during inference, so that you get readable results out of the inference algorithm.
-
-
-**4. Use your *special* source domain knowledge to make configurations that make sense for the problem you're solving**
+**3. Use your *special* source domain knowledge to make configurations that make sense for the problem you're solving**
 
 So, when I was doing my thesis on creating a model for bird sounds, I got a general sense of how a model should be configured to solve the problem, here are some key aspects that you'll probably need to take into account for your
 
@@ -126,6 +143,10 @@ The forwarding arguments for every transformation class is assumed to be x, line
 In the interest of supporting pure classification problems, especially mutual exclusive classification problems, where neither lines nor labels probably need to be forwarded, as in most cases of such problems the class of the underlying data remains constant no matter how it's augmented, there is an option to only forward the x-tensor through any instance of the AudioTransformer-class. Therefore, each class currently needs to have a special case where lines=None and labels=None, where the module does not do any line or label readjustment that would otherwise be necessary with transforms like the time shifting transform. This means that if lines and labels are to be augmented, it's best to leave an if statement in the style of the following snippet.
 
 # TODOs
+
+**Make download scripts for downloading pretrained models**
+
+One time in the future, downloading pretrained models would probably make it easier to apply all this stuff for an end user
 
 **Add more datasets!**
 
@@ -151,3 +172,11 @@ Sadly, not everyone runs linux; nah just kidding, but I do, and the codebase in 
 
 The inferrence speed is, putting it lightly, somewhat abysmal (8 mins for 24h audio when inferring on a RTX3090). Most of the inferrence timing is used for creating spectrograms (educated guess), making huge spectrograms, slicing these for inferrence, is probably a better approach than creating num_hops spectrograms for every time sequence. Currently, model complexity is not the major bottleneck when inferring, it'll probably be a good idea to change this before making industrial sized practical applications of this piece of steaming hot garbage.
 Another possibility, is of course to make 1D models, which could be cool.
+
+**More data augmentation and feature engineering**
+Should make data augmentation GPU accelerated, but I'll have to rewrite a bucnh of functionality for this, so I'm not rushing to do it.
+Should probably check out facebooks augly package for some inspiration for new augmentation stuff, but probably a better idea to do some own implementation of their stuff as augly INSISTS on using np arrays and storing audio data as new files for some transforms and I don't fuck with that.
+Should probably also implement some progressive learning stuff which have shown promising resutls in the case of EfficientNetV2.
+
+**Doxygen comment formatting**
+Yeah, should probably reformat comments so they support doxygen.
