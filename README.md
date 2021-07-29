@@ -38,7 +38,7 @@ These commands create an environment for python just for this project in SSED/en
 
 # Howto create "state of the art model" with your own data
 
-Okay, so you have a problem where you actually need to create your own * *state of the art* * model for sound event detection, because of reasons. No worries! I'll take you through the steps of doing it right here.
+Okay, so you have a problem where you actually need to create your own * *state of the art* * model for sound event detection, because of reasons. No worries! I'll take you through the steps of doing it right here. BTW, this section is still being written/developed, email me if you have any questions.
 
 **1. Creating annotations for a dataset**
 
@@ -95,8 +95,13 @@ class mydataset(dataset):
     
 ```
 
-**Add stuff in the codebase for your dataset**
-Some stuff in the codebase requires that you add some new functionality, e.g. referencing and dereferencing class labels, so that the model can read numbers and the humans on the other side can read names.
+**3. Add some key functionality in the codebase to support your dataset**
+
+Some stuff in the codebase requires that you add some new functionality to support your newly created dataset, below is an attempt to list all these places. If you're having issues, don't hesitate to reach out to me by email!
+
+*Adding your reference and dereference dictionary in classifier/data/datasets/\_\_init\_\_.py to their respective functions*
+
+This is used for the automated dataset creation script and during inference, so that you get readable results out of the inference algorithm.
 
 
 **4. Use your *special* source domain knowledge to make configurations that make sense for the problem you're solving**
@@ -145,3 +150,4 @@ Sadly, not everyone runs linux; nah just kidding, but I do, and the codebase in 
 **Optimize for inferrence speed**
 
 The inferrence speed is, putting it lightly, somewhat abysmal (8 mins for 24h audio when inferring on a RTX3090). Most of the inferrence timing is used for creating spectrograms (educated guess), making huge spectrograms, slicing these for inferrence, is probably a better approach than creating num_hops spectrograms for every time sequence. Currently, model complexity is not the major bottleneck when inferring, it'll probably be a good idea to change this before making industrial sized practical applications of this piece of steaming hot garbage.
+Another possibility, is of course to make 1D models, which could be cool.
