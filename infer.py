@@ -14,7 +14,7 @@ import pandas as pd
 import pathlib
 import argparse
 from tqdm import tqdm
-from torch.utils.data import DataLoader, dataloader
+from torch.utils.data import DataLoader
 from torch import sigmoid
 #Used to dereference from active neuron to class name
 from classifier.data.datasets import dereference_dict

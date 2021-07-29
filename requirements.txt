@@ -5,6 +5,7 @@ efficientnet_pytorch
 numpy
 pandas
 matplotlib
-torchaudio
 torch
 torchvision
+torchaudio
+pydub
